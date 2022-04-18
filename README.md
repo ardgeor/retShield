@@ -27,7 +27,9 @@ Defending from stack buffer overflow through dynamic instrumentation
 <details>
 <summary>Dynamic Binary Instrumentation (DBI) and Frida</summary>
 
-* [`Concept`](#dynamic-binary-instrumentation-(dbi)-and-frida)
+* [`Concept`](#dynamic-binary-instrumentation-and-frida)
+* [`Stalker`](#stalker)
+* [`Interceptor`](#interceptor)
 
 </details>
 
@@ -299,6 +301,14 @@ root
 
 
 ```
+
+
+
+##### Demo
+
+By using the Frida Stalker, it is possible to see the instructions executed by the target. Namely, how the execution flow is redirected until the shellcode.
+
+![Demo](pictures/exploit+stalker.gif)
 
 
 
@@ -587,16 +597,37 @@ In the picture below, the execution flow has just returned from executing the `s
 
 <br>[⬆ top](#table-of-contents)
 
-## Dynamic Binary Instrumentation (DBI) and Frida
+## Dynamic Binary Instrumentation and Frida
 
-Dynamic binary instrumentation can be defined as [the process of modifying the instructions of a binary program while it executes, through the injection of code](https://it-qa.com/what-is-dynamic-binary-instrumentation/). 
+*Dynamic binary instrumentation* (DBI) can be defined as [the process of modifying the instructions of a binary program while it executes, through the injection of code](https://it-qa.com/what-is-dynamic-binary-instrumentation/). 
 
 [Frida](https://frida.re/) is an open-source framework for dynamic instrumentation that allows to control a program in execution. Frida is widely used by reverse engineers
 and security researchers, as it is easy to use, multi-architecture, powerful and offers infinite possibilities to create more specific tools on top of it.
 
+<br>[⬆ top](#table-of-contents)
+
+### Stalker
+
 [Stalker](https://frida.re/docs/stalker/) is the tracing engine of the Frida framework. Through the [Stalker API](https://frida.re/docs/javascript-api/#stalker), It is possible to follow the threads of a running process and capture every instruction that is executed, and even modify the code or the memory dynamically.
 
+The way it works is by copying the instructions to be executed by a thread, combining them other auxiliary instructions that allow to obtain details about what instructions are going to be executed. In this way, the original instructions are not modified, which should about problems with anti-tampering  protections
+
+[Picture source](https://medium.com/@oleavr/anatomy-of-a-code-tracer-b081aadb0df8)
+
+![](pictures/stalker_mechanism.png)
+
+<br>[⬆ top](#table-of-contents)
+
+### Interceptor
+
 The Frida [Interceptor](https://frida.re/docs/javascript-api/#interceptor) object allows to set hooks on native functions and define callbacks with actions to perform before and after the actual function is executed.
+
+Another possibility is to replace a function with a custom implementation. Moreover, it is possible to detach hooks at a specific moment, which can be useful to bypass protections. Hooks are set through *trampolines*, i.e. the first instructions of the target function are overwritten by a jump to another memory area, where instructions have been injected, followed by a jump back to the original function.
+This mechanism illustrated in the picture below, the instructions of the function without being hooked are shown in the upper part, the instructions of the function being hooked are at the bottom.
+
+
+
+![](pictures/interceptor_mechanism_trampoline.png)
 
 <br>[⬆ top](#table-of-contents)
 
