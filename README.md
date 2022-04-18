@@ -623,7 +623,7 @@ The way it works is by copying the instructions to be executed by a thread, comb
 The Frida [Interceptor](https://frida.re/docs/javascript-api/#interceptor) object allows to set hooks on native functions and define callbacks with actions to perform before and after the actual function is executed.
 
 Another possibility is to replace a function with a custom implementation. Moreover, it is possible to detach hooks at a specific moment, which can be useful to bypass protections. Hooks are set through *trampolines*, i.e. the first instructions of the target function are overwritten by a jump to another memory area, where instructions have been injected, followed by a jump back to the original function.
-This mechanism illustrated in the picture below, the instructions of the function without being hooked are shown in the upper part, the instructions of the function being hooked are at the bottom.
+This mechanism is illustrated in the picture below, the instructions of the function without being hooked are shown in the upper part, the instructions of the function being hooked are at the bottom.
 
 
 
